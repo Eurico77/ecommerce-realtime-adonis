@@ -1,10 +1,10 @@
 'use strict'
 
-/** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
-
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
+
+/** @type {import('@adonisjs/framework/src/Hash')} */
+const Hash = use('Hash')
 
 class User extends Model {
   static boot() {
@@ -21,10 +21,17 @@ class User extends Model {
     })
   }
 
+  /**
+   * Oculta os campos definidos no retorno, das queries no DB
+   */
+  static get hidden() {
+    return ['password']
+  }
+
   static get traits() {
     return [
       '@provider:Adonis/Acl/HasRole',
-      '@provider:Adonis/Acl/HasPermission',
+      '@provider:Adonis/Acl/HasPermission'
     ]
   }
 
@@ -40,6 +47,14 @@ class User extends Model {
    */
   tokens() {
     return this.hasMany('App/Models/Token')
+  }
+
+  image() {
+    return this.belongsTo('App/Models/Image')
+  }
+
+  coupons() {
+    return this.belongsToMany('App/Models/Coupon')
   }
 }
 
